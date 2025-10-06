@@ -20,7 +20,8 @@ explanation: sort = Sorts lines of text.
 >>>>>> -h = Sort by human-readable numbers (e.g., 2K, 1M, 1G) correctly.
 >>>>>> -r = Sort in reverse order — largest sizes first.
 
-sudo du -h --max-depth=1 / | sort -hr #####Gives you a quick overview of what folders are using the most disk space directly under root.
+#####Gives you a quick overview of what folders are using the most disk space directly under root.
+sudo du -h --max-depth=1 / | sort -hr 
 
 
 Mysql localhost command
