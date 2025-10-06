@@ -1,0 +1,111 @@
+Command reference for zabbix
+
+du = disk usage
+-h = human-readable format (e.g., KB, MB, GB)
+--max-depth=1 = only show sizes for the immediate directories inside /
+sort -hr = sort results by size (largest first)
+
+for file system of localhost with Zabbix application------
+df -h       ######command for disk file human readable
+
+explanation: du -h --max-depth=1 /
+>>>>>> du = Disk Usage, reports the size of directories and files.
+>>>>>> -h = Human-readable — prints sizes in KB, MB, GB instead of bytes.
+>>>>>> --max-depth=1 = Limits how deep du goes in the directory tree.
+It sums the size of directories/files only one level deep under / (the root directory).
+>>>>>> / = The root directory — this tells du to calculate sizes for folders directly inside /.
+explanation: | (pipe) = Sends the output of the du command as input to the next command (sort).
+explanation: sort -hr
+explanation: sort = Sorts lines of text.
+>>>>>> -h = Sort by human-readable numbers (e.g., 2K, 1M, 1G) correctly.
+>>>>>> -r = Sort in reverse order — largest sizes first.
+
+sudo du -h --max-depth=1 / | sort -hr #####Gives you a quick overview of what folders are using the most disk space directly under root.
+
+
+Mysql localhost command
+
+mysql -u zabbix -p -e "SHOW FULL PROCESSLIST;"
+
+sudo systemctl restart mysql
+sudo mysql -e "SHOW VARIABLES LIKE 'log_bin';"
+sudo mysql -e "SHOW BINARY LOGS;"
+df -h
+
+------For zabbix database-------
+sudo mysql -u zabbix -p -e "SHOW BINARY LOGS;"
+Enter password:
+ERROR 1227 (42000) at line 1: Access denied; you need (at least one of) the SUPER, REPLICATION CLIENT privilege(s) for this operation
+SOLUTION: 
+##### log in to mysql root
+sudo mysql -u root -p
+##### RUN the command  
+GRANT REPLICATION CLIENT ON *.* TO 'zabbix'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+##### THEN run again the 
+sudo mysql -u zabbix -p -e "SHOW BINARY LOGS;"
+##### Output
+sudo mysql -u zabbix -p -e "SHOW BINARY LOGS;"
+Enter password:
++------------------+-----------+-----------+
+| Log_name         | File_size | Encrypted |
++------------------+-----------+-----------+
+| mysql-bin.000001 |  86400607 | No        |
+| mysql-bin.000002 |   4458655 | No        |
+| mysql-bin.000003 |  44870472 | No        |
++------------------+-----------+-----------+
+###### For human readable output
+sudo mysql -u zabbix -p -e "SHOW BINARY LOGS;" | awk '
+NR==1 {print "| Log File         | Size (MB) | Encrypted? |"; print "|------------------|-----------|------------|"; next}
+NR>1 {
+    size_mb = $2 / 1048576;
+    printf("| %-16s | %9.1f | %-10s |\n", $1, size_mb, $3)
+}'
+
+##### For mysql "expire logs days"
+sudo mysql -e "SHOW VARIABLES LIKE 'expire_logs_days';"
+>> ubuntu@ip-10-0-0-6:~$ sudo mysql -e "SHOW VARIABLES LIKE 'expire_logs_days';"
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| expire_logs_days | 0     |
++------------------+-------+
+##### For mysql "log bin"
+sudo mysql -e "SHOW VARIABLES LIKE 'log_bin';"
+>> ubuntu@ip-10-0-0-6:~$ sudo mysql -e "SHOW VARIABLES LIKE 'log_bin';"
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| log_bin       | ON    |
++---------------+-------+
+##### For mysql "bin log expire logs seconds"
+sudo mysql -e "SHOW VARIABLES LIKE 'binlog_expire_logs_seconds';"
+>> ubuntu@ip-10-0-0-6:~$ sudo mysql -e "SHOW VARIABLES LIKE 'binlog_expire_logs_seconds';"
++----------------------------+--------+
+| Variable_name              | Value  |
++----------------------------+--------+
+| binlog_expire_logs_seconds | 259200 |
++----------------------------+--------+
+#### For msql to list all database along with how much disk space is using, sorted from large to smallest
+sudo mysql -e "
+SELECT table_schema AS 'Database',
+       ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'Size_MB'
+FROM information_schema.tables
+GROUP BY table_schema
+ORDER BY Size_MB DESC;
+"
+
+------For zabbix binary logs experation to take effect 
+#### First modify the /etc/mysql/my.cnf
+sudo nano /etc/mysql/my.cnf
+Add this - !includedir /etc/mysql/mysql.conf.d/ then save
+sudo systemctl restart mysql  ##### restart the service
+
+
+
+
+
+      
+
+
