@@ -103,6 +103,28 @@ sudo nano /etc/mysql/my.cnf
 Add this - !includedir /etc/mysql/mysql.conf.d/ then save
 sudo systemctl restart mysql  ##### restart the service
 
+-----To find and list top 20 largest file under /var/lib/mysql (including all subdirectories)
+sudo find /var/lib/mysql -type f -exec du -h {} + | sort -hr | head -n 20
+3.6G    /var/lib/mysql/zabbix/history_uint.ibd
+1.1G    /var/lib/mysql/binlog.000116
+1.1G    /var/lib/mysql/binlog.000115
+1.1G    /var/lib/mysql/binlog.000114
+1.1G    /var/lib/mysql/binlog.000113
+1.1G    /var/lib/mysql/binlog.000112
+1.1G    /var/lib/mysql/binlog.000111
+1.1G    /var/lib/mysql/binlog.000110
+1.1G    /var/lib/mysql/binlog.000108
+1.1G    /var/lib/mysql/binlog.000107
+1.1G    /var/lib/mysql/binlog.000106
+1.1G    /var/lib/mysql/binlog.000105
+1.1G    /var/lib/mysql/binlog.000104
+1.1G    /var/lib/mysql/binlog.000103
+1.1G    /var/lib/mysql/binlog.000102
+1.1G    /var/lib/mysql/binlog.000100
+1.1G    /var/lib/mysql/binlog.000099
+1.1G    /var/lib/mysql/binlog.000098
+1.1G    /var/lib/mysql/binlog.000097
+1.1G    /var/lib/mysql/binlog.000094
 
 
 
