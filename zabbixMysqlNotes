@@ -86,7 +86,7 @@ sudo mysql -e "SHOW VARIABLES LIKE 'binlog_expire_logs_seconds';"
 +----------------------------+--------+
 | Variable_name              | Value  |
 +----------------------------+--------+
-| binlog_expire_logs_seconds | 259200 |
+| binlog_expire_logs_seconds | 172800 |
 +----------------------------+--------+
 #### For msql to list all database along with how much disk space is using, sorted from large to smallest
 sudo mysql -e "
@@ -125,6 +125,19 @@ sudo find /var/lib/mysql -type f -exec du -h {} + | sort -hr | head -n 20
 1.1G    /var/lib/mysql/binlog.000098
 1.1G    /var/lib/mysql/binlog.000097
 1.1G    /var/lib/mysql/binlog.000094
+
+-----------Creating a cron job for Flush binary logs-------
+sudo crontab -e
+no crontab for root - using an empty one 
+Select an editor. To change later, run 'select-editor'. 
+1. /bin/nano <---- easiest 
+2. /usr/bin/vim.basic 
+3. /usr/bin/vim.tiny 
+4. /bin/ed
+Choose 1-4 [1]:
+
+Then Add @daily mysql -e "FLUSH BINARY LOGS;"
+
 
 
 
