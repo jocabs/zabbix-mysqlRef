@@ -138,6 +138,23 @@ Choose 1-4 [1]:
 
 Then Add @daily mysql -e "FLUSH BINARY LOGS;"
 
+[mysqld]
+innodb_buffer_pool_size = 2G
+innodb_buffer_pool_instances = 2
+innodb_log_buffer_size = 64M
+innodb_log_file_size = 512M
+innodb_flush_log_at_trx_commit = 2
+innodb_flush_method = O_DIRECT
+tmp_table_size = 128M
+max_heap_table_size = 128M
+table_open_cache = 2000
+table_definition_cache = 2000
+max_connections = 200
+query_cache_size = 0
+query_cache_type = 0
+innodb_file_per_table = 1
+
+
 
 
 
